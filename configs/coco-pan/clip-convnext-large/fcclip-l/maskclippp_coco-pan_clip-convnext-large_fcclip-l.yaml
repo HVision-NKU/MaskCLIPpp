@@ -12,7 +12,7 @@ MODEL:
     VISUAL_ENCODER_F:
       NAME: "CLIPConvNeXt"
       MODEL_NAME: "convnext_large_d_320"
-      PRETRAINED: "pretrained/models--laion--CLIP-convnext_large_d_320.laion2B-s29B-b131K-ft-soup/snapshots/39918dfbdf69ccd2172e6510a430e92337ee23e1/open_clip_pytorch_model.bin"
+      PRETRAINED: "laion2B-s29B-b131K-ft-soup"
       OUT_FEATURES: ["stage1_f", "stage2_f", "stage3_f", "stage4_f"]
       FEATURE_SUFFIX: "_f"
       FINETUNE_TYPE: "none"
@@ -25,7 +25,7 @@ MODEL:
     TEXT_ENCODER_F:
       NAME: "CLIPTextEncoder"
       MODEL_NAME: "convnext_large_d_320"
-      PRETRAINED: "pretrained/models--laion--CLIP-convnext_large_d_320.laion2B-s29B-b131K-ft-soup/snapshots/39918dfbdf69ccd2172e6510a430e92337ee23e1/open_clip_pytorch_model.bin"
+      PRETRAINED: "laion2B-s29B-b131K-ft-soup"
     SEGMENTOR:
       NAME: "FCCLIPSegmentor"
       PRETRAINED: "output/ckpts/fcclip/fcclip_coco-pan_clip-convnext-large.pth"

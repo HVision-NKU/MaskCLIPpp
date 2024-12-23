@@ -7,7 +7,7 @@ MODEL:
     VISUAL_ENCODER_F:
       NAME: "CLIPConvNeXt"
       MODEL_NAME: "convnext_base_w_320"
-      PRETRAINED: "pretrained/laion_CLIP-convnext_base_w_320-laion_aesthetic-s13B-b82K-augreg/open_clip_pytorch_model.bin"
+      PRETRAINED: "laion_aesthetic-s13B-b82K-augreg"
       LOAD_FROM: "output/ckpts/maftp/maftp_b.pth"
       LOAD_BEG_KEY: "backbone.clip_model.visual."
       OUT_FEATURES: ["stage1_f", "stage2_f", "stage3_f", "stage4_f"]
@@ -22,7 +22,7 @@ MODEL:
     TEXT_ENCODER_F:
       NAME: "CLIPTextEncoder"
       MODEL_NAME: "convnext_base_w_320"
-      PRETRAINED: "pretrained/laion_CLIP-convnext_base_w_320-laion_aesthetic-s13B-b82K-augreg/open_clip_pytorch_model.bin"
+      PRETRAINED: "laion_aesthetic-s13B-b82K-augreg"
       LOAD_FROM: "output/ckpts/maftp/maftp_b.pth"
       LOAD_BEG_KEY: "backbone.clip_model."
     SEGMENTOR:
