@@ -1,0 +1,7 @@
+_BASE_: maskclippp_coco-stuff_eva-clip-vit-l-14-336_wtext_maft-l.yaml
+
+MODEL:
+  MASKCLIPPP:
+    TEST:
+      ENSEMBLE_ON: True
+      GEOMETRIC_ENSEMBLE_ALPHA: 0.9

@@ -1,0 +1,7 @@
+_BASE_: maskclippp_coco-stuff_clip-convnext-base_maft-b.yaml
+
+MODEL:
+  MASKCLIPPP:
+    TEST:
+      ENSEMBLE_ON: True
+      GEOMETRIC_ENSEMBLE_ALPHA: 0.6

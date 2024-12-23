@@ -1,0 +1,81 @@
+_BASE_: ../maskformer2_R50_bs16_50ep.yaml
+
+MODEL:
+  META_ARCHITECTURE: "MaskCLIPpp"
+  WEIGHTS: ""
+  MASKCLIPPP:
+    VISUAL_ENCODER:
+      NAME: "CLIPConvNeXt"
+      MODEL_NAME: "convnext_xxlarge"
+      PRETRAINED: "laion2B-s34B-b82K-augreg-soup"
+      OUT_FEATURES: ["m_embs", "p_embs"]
+      FEATURE_SUFFIX: ""
+      FINETUNE_TYPE: "all"
+      PIXEL_MEAN: [122.7709383, 116.7460125, 104.09373615]
+      PIXEL_STD: [68.5005327, 66.6321579, 70.32316305]
+      SIZE_DIVISIBILITY: 32
+      DOWNSAMPLE_METHOD: 'bilinear'
+      DOWN_MASK_THRESH: 0.0
+      TEST_RESIZE_TYPE: "short"
+      TEST_IMAGE_SIZE: 640
+      MASK_PRIOR_BEG: 5
+    TEXT_ENCODER:
+      NAME: "CLIPTextEncoder"
+      MODEL_NAME: "convnext_xxlarge"
+      PRETRAINED: "laion2B-s34B-b82K-augreg-soup"
+    TEMPLATES: "t14"
+    PSM:
+      NAME: "PseudoTextPSM"
+      IN_FEATURES: ["p_embs"]
+      NUM_HEADS: 8
+      DETACH_VISUAL_COND: False
+      NORM_VISUAL_COND: True
+      CORR_RESIDUAL: False
+      ATTENTION_PROBS_DROPOUT_PROB: 0.1
+      CORR_WIDTH: 512
+    CRITERION:
+      NAME: "ReweightCELoss"
+      TEMPERATURE: 1.0
+      BALANCE_CLS: True
+
+SOLVER:
+  OPTIMIZER: "ADAMW"
+  CLIP_GRADIENTS:
+    ENABLED: True
+    CLIP_TYPE: "full_model"
+    CLIP_VALUE: 0.01
+    NORM_TYPE: 2.0
+  AMP:
+    ENABLED: True
+  LR_SCHEDULER_NAME: "WarmupCosineLR"
+  MAX_ITER: 20000
+  BASE_LR: 1e-4
+  BASE_LR_END: 1e-5
+  VISUAL_ENCODER_MULTIPLIER: 0.001
+  IMS_PER_BATCH: 4
+  WARMUP_ITERS: 0
+  CHECKPOINT_PERIOD: 4000
+TEST:
+  EVAL_PERIOD: 4000
+
+
+DATASETS:
+  TRAIN: ("openvocab_coco_2017_train_panoptic_with_sem_seg",)
+  TEST: ("openvocab_ade20k_panoptic_val",)
+
+
+INPUT:
+  # for coco-pan train
+  IMAGE_SIZE: 1024
+  MIN_SCALE: 0.1
+  MAX_SCALE: 2.0
+  FORMAT: "RGB"
+  DATASET_MAPPER_NAME: "coco_panoptic_lsj"
+  MIN_SIZE_TEST: 800
+  MAX_SIZE_TEST: 2560
+
+DATALOADER:
+  FILTER_EMPTY_ANNOTATIONS: True
+  NUM_WORKERS: 4
+
+VERSION: 2

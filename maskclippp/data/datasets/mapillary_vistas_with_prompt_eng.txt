@@ -1,0 +1,65 @@
+0:bird,birds
+1:ground animal,ground animate being,dog,cat,horse,cow,sheep,zebra,giraffe
+2:curb,curbs
+3:fence,fences
+4:guard rail
+5:barrier
+6:wall,walls,brick wall,stone wall,interior wall
+7:bike Lane
+8:crosswalk
+9:curb cut
+10:parking
+11:pedestrian area
+12:rail track
+13:road
+14:service lane
+15:sidewalk,pavement
+16:bridge
+17:building,buildings
+18:tunnel
+19:person,child,girl,boy,woman,man,people,children,girls,boys,women,men,lady,guy,ladies,guys,clothes
+20:bicyclist,bicyclists
+21:motorcyclist,motorcyclists
+22:other rider,rider
+23:lane marking of crosswalk
+24:lane marking
+25:mountain,mountains
+26:sand
+27:sky,clouds
+28:snow
+29:terrain,river,sea,grass,dirt,rock
+30:vegetation,tree,trees,palm tree,bushes
+31:water
+32:banner,streamer
+33:bench,benches
+34:bike rack
+35:billboard,hoarding
+36:catch basin
+37:cctv camera,cctv
+38:fire hydrant,fireplug,plug
+39:junction box
+40:mailbox,postbox,mailbox,letter box
+41:manhole
+42:phone booth,telephone booth,call box,telephone box,telephone kiosk
+43:pothole
+44:street light
+45:pole
+46:traffic sign frame
+47:utility pole
+48:traffic light,traffic signal,traffic lights
+49:traffic sign (back),back of traffic sign,traffic sign back
+50:traffic sign (front),front of traffic sign,traffic sign front
+51:trash can,ashcan,garbage can,wastebin,ash bin,ash-bin,ashbin,dustbin,trash barrel,trash bin
+52:bicycle,bike
+53:boat
+54:bus,autobus,double-decker,jitney,motorbus,motorcoach,omnibus,passenger vehicle
+55:car,automobile,cars
+56:caravan
+57:motorcycle,motorcycles
+58:on rails
+59:other vehicle,vehicle
+60:trailer
+61:truck,motortruck
+62:wheeled slow
+63:car mount
+64:ego vehicle

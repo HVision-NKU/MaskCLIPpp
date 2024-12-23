@@ -1,0 +1,81 @@
+_BASE_: ../maskformer2_R50_bs16_50ep.yaml
+
+MODEL:
+  META_ARCHITECTURE: "MaskCLIPpp"
+  WEIGHTS: ""
+  MASKCLIPPP:
+    VISUAL_ENCODER:
+      NAME: "CLIPConvNeXt"
+      MODEL_NAME: "convnext_base_w_320"
+      PRETRAINED: "pretrained/laion_CLIP-convnext_base_w_320-laion_aesthetic-s13B-b82K-augreg/open_clip_pytorch_model.bin"
+      OUT_FEATURES: ["m_embs", "p_embs"]
+      FEATURE_SUFFIX: ""
+      FINETUNE_TYPE: "all"
+      PIXEL_MEAN: [122.7709383, 116.7460125, 104.09373615]
+      PIXEL_STD: [68.5005327, 66.6321579, 70.32316305]
+      SIZE_DIVISIBILITY: 32
+      DOWNSAMPLE_METHOD: 'bilinear'
+      DOWN_MASK_THRESH: 0.0
+      TEST_RESIZE_TYPE: "short"
+      TEST_IMAGE_SIZE: 512
+      MASK_PRIOR_BEG: 5
+    TEXT_ENCODER:
+      NAME: "CLIPTextEncoder"
+      MODEL_NAME: "convnext_base_w_320"
+      PRETRAINED: "pretrained/laion_CLIP-convnext_base_w_320-laion_aesthetic-s13B-b82K-augreg/open_clip_pytorch_model.bin"
+    TEMPLATES: "t14"
+    PSM:
+      NAME: "PseudoTextPSM"
+      IN_FEATURES: ["p_embs"]
+      NUM_HEADS: 8
+      DETACH_VISUAL_COND: False
+      NORM_VISUAL_COND: True
+      CORR_RESIDUAL: False
+      ATTENTION_PROBS_DROPOUT_PROB: 0.1
+      CORR_WIDTH: 512
+    CRITERION:
+      NAME: "ReweightCELoss"
+      TEMPERATURE: 1.0
+      BALANCE_CLS: True
+
+SOLVER:
+  OPTIMIZER: "ADAMW"
+  CLIP_GRADIENTS:
+    ENABLED: True
+    CLIP_TYPE: "full_model"
+    CLIP_VALUE: 0.01
+    NORM_TYPE: 2.0
+  AMP:
+    ENABLED: True
+  LR_SCHEDULER_NAME: "WarmupCosineLR"
+  MAX_ITER: 20000
+  BASE_LR: 2e-4
+  BASE_LR_END: 1e-5
+  VISUAL_ENCODER_MULTIPLIER: 0.001
+  IMS_PER_BATCH: 4
+  WARMUP_ITERS: 0
+  CHECKPOINT_PERIOD: 4000
+TEST:
+  EVAL_PERIOD: 4000
+
+INPUT:
+  MIN_SIZE_TRAIN: !!python/object/apply:eval ["[int(x * 0.1 * 1024) for x in range(3, 20)]"]
+  MIN_SIZE_TRAIN_SAMPLING: "choice"
+  MAX_SIZE_TRAIN: 4096
+  MIN_SIZE_TEST: 1024
+  MAX_SIZE_TEST: 2048
+  FORMAT: "RGB"
+  CROP:
+    ENABLED: True
+    TYPE: "absolute"
+    SIZE: (1024, 1024)
+    SINGLE_CATEGORY_MAX_AREA: 1.0
+  COLOR_AUG_SSD: True
+  SIZE_DIVISIBILITY: -1
+  DATASET_MAPPER_NAME: "mask_former_semantic"
+
+DATALOADER:
+  FILTER_EMPTY_ANNOTATIONS: True
+  NUM_WORKERS: 4
+
+VERSION: 2

@@ -1,0 +1,47 @@
+_BASE_: ../maskclippp_coco-pan_clip-convnext-base.yaml
+
+MODEL:
+  SEM_SEG_HEAD:  
+    IGNORE_VALUE: 255
+    NUM_CLASSES: 133
+    LOSS_WEIGHT: 1.0
+    CONVS_DIM: 256
+    MASK_DIM: 256
+    NORM: "GN"
+    COMMON_STRIDE: 4
+    TRANSFORMER_ENC_LAYERS: 6
+  MASK_FORMER:
+    DEEP_SUPERVISION: True
+    HIDDEN_DIM: 256
+    NUM_OBJECT_QUERIES: 100
+    NHEADS: 8
+    DROPOUT: 0.0
+    DIM_FEEDFORWARD: 2048
+    ENC_LAYERS: 0
+    PRE_NORM: False
+    ENFORCE_INPUT_PROJ: False
+  SWIN:
+    EMBED_DIM: 96
+    DEPTHS: [2, 2, 6, 2]
+    NUM_HEADS: [3, 6, 12, 24]
+    WINDOW_SIZE: 7
+    APE: False
+    DROP_PATH_RATE: 0.3
+    PATCH_NORM: True
+  MASKCLIPPP:
+    VISUAL_ENCODER_F:
+      NAME: "D2SwinTransformer"
+      MODEL_NAME: ""  # no use
+      PRETRAINED: "output/ckpts/mask2former/coco/pan/maskformer2_swin_tiny_bs16_50ep_final_9fd0ae.pkl"
+      OUT_FEATURES: ["res2_f", "res3_f", "res4_f", "res5_f"]
+      FEATURE_SUFFIX: "_f"
+      FINETUNE_TYPE: "none" # no use
+      PIXEL_MEAN: [123.675, 116.280, 103.530]
+      PIXEL_STD: [58.395, 57.120, 57.375]
+      SIZE_DIVISIBILITY: 32
+      TEST_RESIZE_TYPE: "none"
+    SEGMENTOR:
+      NAME: "Mask2FormerSegmentor"
+      PRETRAINED: "output/ckpts/mask2former/coco/pan/maskformer2_swin_tiny_bs16_50ep_final_9fd0ae.pkl"
+      IN_FEATURES: ["res2_f", "res3_f", "res4_f", "res5_f"]
+      TRANSFORMER_IN_FEATURES: ["res3_f", "res4_f", "res5_f"]
