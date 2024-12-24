@@ -70,6 +70,7 @@ The mask generators we already support are as follows. If the `path` column is g
 
 | config | ckpt | mIoU | PQ | AP |
 |:---:|:---:|:---:|:---:|:---:|
+| [clip-rn50x16](configs/coco-pan/clip-rn50x16/fcclip-b/maskclippp_coco-pan_clip-rn50x16_fcclip-b.yaml) | [url](https://drive.google.com/file/d/1eCxFDGNATeB1pqmRnEO6OD8GZG-Wf4Hs/view?usp=drive_link) |  29.3 | 21.8 | 11.1 |
 | [clip-convnext-base](configs/coco-pan/clip-convnext-base/fcclip-b/maskclippp_coco-pan_clip-convnext-base_fcclip-b.yaml)  | [url](https://drive.google.com/file/d/1lxlnxVICytERs1FsY5N7LdaoYDyenA1o/view?usp=drive_link) | 35.1 | 24.5 | 13.6 |
 | [clip-convnext-large](configs/coco-pan/clip-convnext-large/fcclip-l/maskclippp_coco-pan_clip-convnext-large_fcclip-l.yaml) | [url](https://drive.google.com/file/d/1XMW3L2dOtlDQapydtoqTfzFVW-VZqcoX/view?usp=drive_link) | 35.6 | 26.5 | 16.7 |
 | [clip-convnext-xxlarge](configs/coco-pan/clip-convnext-xxlarge/fcclip-l/maskclippp_coco-pan_clip-convnext-xxlarge_fcclip-l.yaml) | [url](https://drive.google.com/file/d/1LjVW7CNkvyFzxOW4rbgax1kmWY1lQ3f3/view?usp=drive_link) | 36.4 | 27.1 | 16.6 | 
