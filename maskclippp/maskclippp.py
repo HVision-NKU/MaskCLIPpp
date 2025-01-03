@@ -88,7 +88,7 @@ class MaskCLIPpp(nn.Module):
                 self.register_buffer("_logit_scale", text_encoder.logit_scale.data, persistent=False)
             
         self.train_metadata = train_metadata
-        # self.test_metadata = test_metadata
+        self.test_metadata = test_metadata
         self.text_chunk_size = text_chunk_size
         self.use_logit_scale = use_logit_scale
         # inference

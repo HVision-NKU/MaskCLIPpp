@@ -74,6 +74,10 @@ The mask generators we already support are as follows. If the `path` column is g
 
 ## Usage
 
+## Demo
+
+[Use the demo of MaskCLIP++](demo/README.md).
+
 ### Evaluation
 
 ```bash
@@ -86,7 +90,7 @@ eval_ade150 $config $ckpt $ngpu $tag
 
 ### Fine-tuning
 
-For base/large sized CLIPs, the fine-tuning requires about 2-4 hours on two 3090s (2x24G memory).
+For base/large sized CLIPs, the fine-tuning requires about **2-4 hours on 2x NVIDIA 24G 3090 GPUs**.
 
 ```bash
 python train_maskclippp.py \
