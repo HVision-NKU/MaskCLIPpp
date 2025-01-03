@@ -7,6 +7,9 @@ train*.sh
 !eval_all.sh
 .__dpc*
 matches.json
+make_gif.py
+app.sh
+demo.sh
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

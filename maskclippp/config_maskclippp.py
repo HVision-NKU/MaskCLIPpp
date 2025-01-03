@@ -223,6 +223,8 @@ def add_maskclippp_config(cfg):
     
     cfg.MODEL.MASK_FORMER.TEST.INSTANCE_BOX_ON = False
     
+    cfg.RUN_DEMO = False
+    
     cfg.WANDB = CN()
     cfg.WANDB.ENABLED = False
     cfg.WANDB.PROJECT = "maskclippp"

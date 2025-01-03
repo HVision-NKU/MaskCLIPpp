@@ -60,6 +60,7 @@ class MaskCLIPpp(nn.Module):
         geometric_ensemble_alpha: float,
         geometric_ensemble_beta: float,
         segmentor_only: bool,
+        run_demo: bool
     ):
         super().__init__()
         
@@ -70,12 +71,15 @@ class MaskCLIPpp(nn.Module):
         self.psm = psm
         self.criterion = criterion
         
-        # self.text_encoder = text_encoder   # uncomment this line if use demo
-        
         if text_encoder_f is not None:
             assert text_encoder_f.finetune_none
         if not text_encoder.finetune_none:
             self.text_encoder = text_encoder
+            
+        self.run_demo = run_demo
+        if run_demo:
+            self.text_encoder = text_encoder
+            self.text_encoder_f = text_encoder_f
             
         else:
             if use_logit_scale:
@@ -84,7 +88,7 @@ class MaskCLIPpp(nn.Module):
                 self.register_buffer("_logit_scale", text_encoder.logit_scale.data, persistent=False)
             
         self.train_metadata = train_metadata
-        self.test_metadata = test_metadata
+        # self.test_metadata = test_metadata
         self.text_chunk_size = text_chunk_size
         self.use_logit_scale = use_logit_scale
         # inference
@@ -139,6 +143,7 @@ class MaskCLIPpp(nn.Module):
             local_rank = comm.get_local_rank()
             text_encoder_f = text_encoder_f.to(device="cuda:%d" % local_rank)
             # following are refer to fc-clip
+            self.templates_f = templates_f
             test_sentences_f, _ = self._words_to_sentences(test_synonyms, templates_f)
             print(f"Begin to prepare text classifiers for templates_f: test[{len(test_sentences_f)}]")
             test_t_embs_f = self._cal_text_emb(text_encoder_f, test_sentences_f, distributed=True)
@@ -199,13 +204,15 @@ class MaskCLIPpp(nn.Module):
             "geometric_ensemble_alpha": cfg.MODEL.MASKCLIPPP.TEST.GEOMETRIC_ENSEMBLE_ALPHA,
             "geometric_ensemble_beta": cfg.MODEL.MASKCLIPPP.TEST.GEOMETRIC_ENSEMBLE_BETA,
             "segmentor_only": cfg.MODEL.MASKCLIPPP.TEST.SEGMENTOR_ONLY,
+            "run_demo": cfg.RUN_DEMO
         }
     
-    
+    @torch.inference_mode()
     def set_metadata(self, test_metadata):
+        # test metadata setter for demo
         self.test_metadata = test_metadata
         category_overlapping_mask, test_synonyms = self._prepare_class_names_from_metadata(test_metadata, self.train_metadata, is_train=False)
-        self.category_overlapping_mask = category_overlapping_mask
+        self.category_overlapping_mask = category_overlapping_mask.to(self.device)
         if self.segmentor.is_closed_classifier():
             self.train2test_lut = self._get_train2test_lut(self.train_synonyms, test_synonyms, category_overlapping_mask)
         test_sentences, test_num_synonyms = self._words_to_sentences(test_synonyms, self.templates)
@@ -214,7 +221,14 @@ class MaskCLIPpp(nn.Module):
         test_t_embs = test_t_embs.reshape(sum(test_num_synonyms), len(self.templates), test_t_embs.size(-1))  # Ka,T,D
         test_t_embs /= test_t_embs.norm(dim=-1, keepdim=True)
         self.test_t_embs = test_t_embs
-                    
+        
+        if hasattr(self, "test_t_embs_f"):
+            test_sentences_f, _ = self._words_to_sentences(test_synonyms, self.templates_f)
+            test_t_embs_f = self._cal_text_emb(self.text_encoder_f, test_sentences_f)
+            test_t_embs_f /= test_t_embs_f.norm(dim=-1, keepdim=True)
+            test_t_embs_f = test_t_embs_f.reshape(sum(test_num_synonyms), len(self.templates_f), test_t_embs_f.size(-1)).mean(1)  # Ka,D
+            test_t_embs_f /= test_t_embs_f.norm(dim=-1, keepdim=True)
+            self.test_t_embs_f = test_t_embs_f
         
     def saved_modules(self):
         saved = {
@@ -767,11 +781,11 @@ class MaskCLIPpp(nn.Module):
         result = Instances(image_size)
         # mask (after sigmoid)
         result.pred_masks = (mask_pred > 0.5).float()
-        result.pred_boxes = Boxes(torch.zeros(mask_pred.size(0), 4))
         # Uncomment the following to get boxes from masks (this is slow)
         if self.instance_box_on:
             result.pred_boxes = BitMasks(mask_pred > 0.5).get_bounding_boxes()
-
+        elif not self.run_demo:
+            result.pred_boxes = Boxes(torch.zeros(mask_pred.size(0), 4))
         # calculate average mask prob
         mask_scores_per_image = (mask_pred.flatten(1) * result.pred_masks.flatten(1)).sum(1) / (result.pred_masks.flatten(1).sum(1) + 1e-6)
         result.scores = scores_per_image * mask_scores_per_image

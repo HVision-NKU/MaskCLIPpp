@@ -1,5 +1,8 @@
 # MaskCLIP++: A Mask-Based CLIP Fine-tuning Framework for Open-Vocabulary Image Segmentation
 
+## News
+- [x] (2025.01.03) Add [demo](demo/README.md).
+
 ## Introduction
 
 This repo contains the code for our [paper](https://arxiv.org/abs/2412.11464).
@@ -27,16 +30,7 @@ See [Preparing Datasets for MaskCLIP++](datasets/README.md).
 
 ### Pretrained CLIP models
 
-The pre-trained CLIP model we used is as follows. If the `path` column is given, it is required to manually download the model to the corresponding relative path.
-
-|         name          |                                                weights                                       |     path      |
-|:---------------------:|:--------------------------------------------------------------------------------------------:|:-------------:|
-| clip-convnext-base    | [url](https://huggingface.co/laion/CLIP-convnext_base_w_320-laion_aesthetic-s13B-b82K-augreg) |      -        |
-| clip-convnext-large   | [url](https://huggingface.co/laion/CLIP-convnext_large_d_320.laion2B-s29B-b131K-ft-soup)      |      -        |
-| clip-convnext-xxlarge | [url](https://huggingface.co/laion/CLIP-convnext_xxlarge-laion2B-s34B-b82K-augreg-soup)       |      -        |
-| eva-clip-vit-b-16     | [url](https://huggingface.co/QuanSun/EVA-CLIP/blob/main/EVA02_CLIP_B_psz16_s8B.pt)            |`pretrained/eva_clip/EVA02_CLIP_B_psz16_s8B.pt`       |
-| eva-clip-vit-l-14-336 | [url](https://huggingface.co/QuanSun/EVA-CLIP/blob/main/EVA02_CLIP_L_336_psz14_s6B.pt)        |`pretrained/eva_clip/EVA02_CLIP_L_336_psz14_s6B.pt`   |
-| eva-clip-vit-g-14-plus| [url](https://huggingface.co/QuanSun/EVA-CLIP/blob/main/EVA01_CLIP_g_14_plus_psz14_s11B.pt)   |`pretrained/eva_clip/EVA01_CLIP_g_14_plus_psz14_s11B.pt` |
+The pre-trained CLIP can be downloaded automatically from huggingface.
 
 
 ### Mask generators
