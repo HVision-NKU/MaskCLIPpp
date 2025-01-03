@@ -7,7 +7,7 @@ MODEL:
     VISUAL_ENCODER:
       NAME: "EVACLIPViT"
       MODEL_NAME: "EVA01-CLIP-g-14-plus"
-      PRETRAINED: "pretrained/eva_clip/EVA01_CLIP_g_14_plus_psz14_s11B.pt"
+      PRETRAINED: "eva01_clip"
       OUT_FEATURES: ["m_embs"]
       FEATURE_SUFFIX: ""
       FINETUNE_TYPE: "attention"
@@ -25,7 +25,7 @@ MODEL:
     TEXT_ENCODER:
       NAME: "EVACLIPTextEncoder"
       MODEL_NAME: "EVA01-CLIP-g-14-plus"
-      PRETRAINED: "pretrained/eva_clip/EVA01_CLIP_g_14_plus_psz14_s11B.pt"
+      PRETRAINED: "eva01_clip"
     TEMPLATES: "t14"
     USE_LOGIT_SCALE: True
     PSM:
