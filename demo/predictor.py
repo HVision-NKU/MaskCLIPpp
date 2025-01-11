@@ -123,7 +123,7 @@ class VisualizationDemo(object):
             self.predictor = DefaultPredictor(cfg)
         
         self.set_classes(predefined_classes, user_classes)
-        
+    
     def set_classes(self, predefined_classes, user_classes):
         stuff_classes = []
         thing_classes = []
@@ -206,6 +206,31 @@ class VisualizationDemo(object):
         )
         self.predictor.set_metadata(self.metadata)
         return rtn_info
+    
+    def _ins_seg_on_image(self, visualizer, predictions):
+        instances = predictions["instances"].to(self.cpu_device)
+        if hasattr(instances, "scores"):
+            scores = instances.scores
+            keep = scores >= self.confidence_threshold
+            new_inst = Instances(instances.image_size, **{k: v[keep] for k, v in instances.get_fields().items()})
+            vis_output = visualizer.draw_instance_predictions(predictions=new_inst)
+        else:
+            vis_output = visualizer.draw_instance_predictions(predictions=instances)
+        return vis_output
+    
+    def _pan_seg_on_image(self, visualizer, predictions):
+        panoptic_seg, segments_info = predictions["panoptic_seg"]
+        vis_output = visualizer.draw_panoptic_seg(
+            panoptic_seg.to(self.cpu_device), segments_info
+        )
+        return vis_output
+
+    def _sem_seg_on_image(self, visualizer, predictions):
+        vis_output = visualizer.draw_sem_seg(
+            predictions["sem_seg"].argmax(dim=0).to(self.cpu_device)
+        )
+        return vis_output
+    
 
     def run_on_image(self, image):
         """
@@ -222,26 +247,27 @@ class VisualizationDemo(object):
         image = image[:, :, ::-1]
         visualizer = OpenVocabVisualizer(image, self.metadata, instance_mode=self.instance_mode)
         if "instances" in predictions:
-            instances = predictions["instances"].to(self.cpu_device)
-            if hasattr(instances, "scores"):
-                scores = instances.scores
-                keep = scores >= self.confidence_threshold
-                new_inst = Instances(instances.image_size, **{k: v[keep] for k, v in instances.get_fields().items()})
-                vis_output = visualizer.draw_instance_predictions(predictions=new_inst)
-            else:
-                vis_output = visualizer.draw_instance_predictions(predictions=instances)
+            vis_output = self._ins_seg_on_image(visualizer, predictions)
         elif "panoptic_seg" in predictions:
-            panoptic_seg, segments_info = predictions["panoptic_seg"]
-            vis_output = visualizer.draw_panoptic_seg(
-                panoptic_seg.to(self.cpu_device), segments_info
-            )
+            vis_output = self._pan_seg_on_image(visualizer, predictions)
         elif "sem_seg" in predictions:
-            vis_output = visualizer.draw_sem_seg(
-                predictions["sem_seg"].argmax(dim=0).to(self.cpu_device)
-            )
+            vis_output = self._sem_seg_on_image(visualizer, predictions)
         else:
             raise ValueError()
         return predictions, vis_output
+
+    def multi_vis_on_image(self, image):
+        vis_dict = {}
+        predictions = self.predictor(image)
+        image = image[:, :, ::-1]
+        visualizer = OpenVocabVisualizer(image, self.metadata, instance_mode=self.instance_mode)
+        if "instances" in predictions:
+            vis_dict["ins_seg"] = self._ins_seg_on_image(visualizer, predictions)
+        if "panoptic_seg" in predictions:
+            vis_dict["pan_seg"] = self._pan_seg_on_image(visualizer, predictions)
+        if "sem_seg" in predictions:
+            vis_dict["sem_seg"] = self._sem_seg_on_image(visualizer, predictions)
+        return predictions, vis_dict
 
     def _frame_from_video(self, video):
         while video.isOpened():

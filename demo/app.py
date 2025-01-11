@@ -39,12 +39,6 @@ def get_parser():
         help="path to config file",
     )
     parser.add_argument(
-        "--confidence-threshold",
-        type=float,
-        default=0.3,
-        help="Minimum score for instance predictions to be shown",
-    )
-    parser.add_argument(
         "--opts",
         help="Modify config options using the command-line 'KEY VALUE' pairs",
         default=[],
@@ -69,10 +63,13 @@ def create_interface(meta_demo: VisualizationDemo) -> gr.Interface:
                 image_input = gr.Image(type="pil", label="Input Image", image_mode="RGB")
                 predefined_classes = gr.CheckboxGroup(choices=predefined_classes_options, label="Predefined Classes", value=["coco2017", "ade20k", "lvis1203"])
                 user_classes = gr.Textbox(label="User Classes (e.g. 'tree,trees|sky,clouds')")
+                conf_th_bar = gr.Slider(minimum=0.0, maximum=1, step=0.1, value=0.3, label="Confidence Threshold")
             with gr.Column():        
                 set_classes_button = gr.Button("Submit Classes")
                 status_text = gr.Textbox(label="Status", value="Classes not updated", interactive=False)
-                output_image = gr.Image(type="pil", label="Output Image", image_mode="RGB")
+                sem_seg_output = gr.Image(type="pil", label="Semantic Segmentation", image_mode="RGB")
+                pan_seg_output = gr.Image(type="pil", label="Panoptic Segmentation", image_mode="RGB")
+                ins_seg_output = gr.Image(type="pil", label="Instance Segmentation", image_mode="RGB")
                 process_button = gr.Button("Submit Image")
     
         def update_classes(predefined_classes: list, user_classes: str):
@@ -84,10 +81,11 @@ def create_interface(meta_demo: VisualizationDemo) -> gr.Interface:
             logger.info("Predefined Classes: %s\nUser Classes: %s", predefined_classes, user_classes_list)
             return meta_demo.set_classes(predefined_classes, user_classes_list)
             
-        def process_image(image):
+        def process_image(image, conf_th):
             start_time = time.time()
             bgr_image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-            predictions, visualized_output = meta_demo.run_on_image(bgr_image)
+            meta_demo.confidence_threshold = conf_th
+            predictions, visualized_dict = meta_demo.multi_vis_on_image(bgr_image)
             logger.info(
                 "{} in {:.2f}s".format(
                     "detected {} instances".format(len(predictions["instances"]))
@@ -96,14 +94,22 @@ def create_interface(meta_demo: VisualizationDemo) -> gr.Interface:
                     time.time() - start_time,
                 )
             )
-            return Image.fromarray(visualized_output.get_image())
+            # return Image.fromarray(visualized_output.get_image())
+            def _get_img(key):
+                if key in visualized_dict:
+                    return visualized_dict[key].get_image()
+                logger.warning("Key %s not found in visualized_dict", key)
+                # return an empty image
+                return Image.fromarray(np.zeros((10, 10, 3), np.uint8))
+            return _get_img("sem_seg"), _get_img("pan_seg"), _get_img("ins_seg")
+            
         
         set_classes_button.click(fn=update_classes,
                                  inputs=[predefined_classes, user_classes],
                                  outputs=[status_text])
         process_button.click(fn=process_image,
-                             inputs=[image_input],
-                             outputs=[output_image])
+                             inputs=[image_input, conf_th_bar],
+                             outputs=[sem_seg_output, pan_seg_output, ins_seg_output])
     return demo
 
 if __name__ == "__main__":
@@ -112,7 +118,7 @@ if __name__ == "__main__":
     logger = setup_logger()
     logger.info("Arguments: " + str(args))
     cfg = setup_cfg(args)
-    meta_demo = VisualizationDemo(cfg, confidence_threshold=args.confidence_threshold)
+    meta_demo = VisualizationDemo(cfg)
     gradio_demo = create_interface(meta_demo)
     gradio_demo.queue()
     gradio_demo.launch()
