@@ -260,12 +260,14 @@ class VisualizationDemo(object):
         vis_dict = {}
         predictions = self.predictor(image)
         image = image[:, :, ::-1]
-        visualizer = OpenVocabVisualizer(image, self.metadata, instance_mode=self.instance_mode)
         if "instances" in predictions:
+            visualizer = OpenVocabVisualizer(image, self.metadata, instance_mode=self.instance_mode)
             vis_dict["ins_seg"] = self._ins_seg_on_image(visualizer, predictions)
         if "panoptic_seg" in predictions:
+            visualizer = OpenVocabVisualizer(image, self.metadata, instance_mode=self.instance_mode)
             vis_dict["pan_seg"] = self._pan_seg_on_image(visualizer, predictions)
         if "sem_seg" in predictions:
+            visualizer = OpenVocabVisualizer(image, self.metadata, instance_mode=self.instance_mode)
             vis_dict["sem_seg"] = self._sem_seg_on_image(visualizer, predictions)
         return predictions, vis_dict
 
