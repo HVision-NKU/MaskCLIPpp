@@ -75,7 +75,7 @@ python demo/demo.py \
 ```shell
 config="configs/coco-pan/eva-clip-vit-l-14-336/fcclip-l/maskclippp_coco-pan_eva-clip-vit-l-14-336_fcclip-l.yaml"
 ckpt="output/ckpts/maskclippp/maskclippp_coco-pan_eva-clip-vit-l-14-336.pth"
-python demo/app.py \
+python demo/demo.py \
     --config-file $config \
     --opts \
     MODEL.WEIGHTS $ckpt \
@@ -91,7 +91,7 @@ python demo/app.py \
 ```shell
 config="configs/coco-pan/eva-clip-vit-l-14-336/fcclip-l/maskclippp_coco-pan_eva-clip-vit-l-14-336_fcclip-l.yaml"
 ckpt="output/ckpts/maskclippp/maskclippp_coco-pan_eva-clip-vit-l-14-336.pth"
-python demo/app.py \
+python demo/demo.py \
     --config-file $config \
     --confidence-threshold 0.3 \
     --opts \
