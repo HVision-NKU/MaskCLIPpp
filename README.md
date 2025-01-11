@@ -41,10 +41,12 @@ The mask generators we already support are as follows. If the `path` column is g
 |:----:|:-------:|:-----:|
 | Mask2Former (Swin-T) | [url](https://dl.fbaipublicfiles.com/maskformer/mask2former/coco/panoptic/maskformer2_swin_tiny_bs16_50ep/model_final_9fd0ae.pkl) | `output/ckpts/mask2former/coco/pan/maskformer2_swin_tiny_bs16_50ep_final_9fd0ae.pkl` |
 | Mask2Former (Swin-L) | [url](https://dl.fbaipublicfiles.com/maskformer/mask2former/coco/panoptic/maskformer2_swin_large_IN21k_384_bs16_100ep/model_final_f07440.pkl) | `output/ckpts/mask2former/coco/pan/maskformer2_swin_large_IN21k_384_bs16_100ep_final_f07440.pkl` |
-| FC-CLIP (ConvNext-B) | [url](https://drive.google.com/file/d/1fSFPPTwxF-ekMxAmIo01ssdbC79wwwml/view?usp=drive_link) | `output/ckpts/fcclip/fcclip_coco-pan_clip-convnext-base.pth`  |
+| FC-CLIP (ConvNext-B) | [url](https://drive.google.com/file/d/1fSFPPTwxF-ekMxAmIo01ssdbC79wwwml/view?usp=drive_link)(*) | `output/ckpts/fcclip/fcclip_coco-pan_clip-convnext-base.pth`  |
 | FC-CLIP (ConvNeXt-L) | [url](https://drive.google.com/file/d/1-91PIns86vyNaL3CzMmDD39zKGnPMtvj/view?usp=sharing) | `output/ckpts/fcclip/fcclip_coco-pan_clip-convnext-large.pth` |
 | MAFTP-B              | [url](https://drive.google.com/file/d/1BeEeKOnWWIWIH-QWK_zLhAPUzCOnHuFG/view?usp=sharing) | `output/ckpts/maftp/maftp_b.pth` |
 | MAFTP-L              | [url](https://drive.google.com/file/d/1EQo5guVuKkSSZj4bv0FQN_4X9h_Rwfe5/view?usp=sharing) | `output/ckpts/maftp/maftp_l.pth` |
+
+> Except for the asterisk-marked(*) url, all the other urls are from the original repository
 
 
 ### MaskCLIP++ models

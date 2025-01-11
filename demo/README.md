@@ -41,6 +41,10 @@ python demo/app.py \
     MODEL.WEIGHTS $ckpt
 ```
 
+<p align="center">
+  <img src="../assets/app.png" alt="app" width="600"/>
+</p>
+
 
 
 ## Command Demo
@@ -55,7 +59,7 @@ python demo/demo.py -h
 ```shell
 config="configs/coco-stuff/eva-clip-vit-l-14-336/maft-l/maskclippp_coco-stuff_eva-clip-vit-l-14-336_wtext_maft-l_ens.yaml"
 ckpt="output/ckpts/maskclippp/maskclippp_coco-stuff_eva-clip-vit-l-14-336_wtext.pth"
-python demo/app.py \
+python demo/demo.py \
     --config-file $config \
     --opts \
     MODEL.WEIGHTS $ckpt \
