@@ -67,10 +67,11 @@ def create_interface(meta_demo: VisualizationDemo) -> gr.Interface:
             with gr.Column():        
                 set_classes_button = gr.Button("Submit Classes")
                 status_text = gr.Textbox(label="Status", value="Classes not updated", interactive=False)
+                process_button = gr.Button("Submit Image")
                 sem_seg_output = gr.Image(type="pil", label="Semantic Segmentation", image_mode="RGB")
                 pan_seg_output = gr.Image(type="pil", label="Panoptic Segmentation", image_mode="RGB")
                 ins_seg_output = gr.Image(type="pil", label="Instance Segmentation", image_mode="RGB")
-                process_button = gr.Button("Submit Image")
+                
     
         def update_classes(predefined_classes: list, user_classes: str):
             user_classes = user_classes.strip()
