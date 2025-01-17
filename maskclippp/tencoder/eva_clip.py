@@ -46,7 +46,7 @@ class EVACLIPTextEncoder(nn.Module):
             load_from_path = Path(cfg.LOAD_FROM)
             if not load_from_path.exists():
                 raise FileNotFoundError(f"Could not find {load_from_path}")
-            load_ckpt = torch.load(load_from_path, map_location="cpu", weights_only=True)
+            load_ckpt = torch.load(load_from_path, map_location="cpu")
             if 'model' in load_ckpt:
                 load_ckpt = load_ckpt['model']
             load_beg_key = cfg.LOAD_BEG_KEY
