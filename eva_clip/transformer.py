@@ -1,5 +1,6 @@
 import os
 import logging
+import warnings
 from collections import OrderedDict
 import math
 from typing import Callable, Optional, Sequence
@@ -17,6 +18,8 @@ from .rope import VisionRotaryEmbedding, VisionRotaryEmbeddingFast
 from .utils import to_2tuple
 
 from torch.utils.checkpoint import checkpoint
+
+TORCH_IS_2_X = torch.__version__.split('.')[0] == '2'
 
 
 class LayerNormFp32(nn.LayerNorm):
@@ -175,6 +178,9 @@ class Attention(nn.Module):
         self.out_proj = nn.Linear(dim, dim)
         self.out_drop = nn.Dropout(proj_drop)
         self.xattn = xattn
+        if self.xattn and not TORCH_IS_2_X:
+            self.xattn = False
+            warnings.warn('sdpa not supported in PyTorch 1.x, falling back to vanilla implementation.')
         self.xattn_drop = attn_drop
         if self.xattn:
             assert self.logit_scale is None
@@ -267,6 +273,9 @@ class CustomAttention(nn.Module):
         self.out_proj = nn.Linear(dim, dim)
         self.out_drop = nn.Dropout(proj_drop)
         self.xattn = xattn
+        if self.xattn and not TORCH_IS_2_X:
+            self.xattn = False
+            warnings.warn('sdpa not supported in PyTorch 1.x, falling back to vanilla implementation.')
         self.xattn_drop = attn_drop
         if self.xattn:
             assert self.logit_scale is None
@@ -395,6 +404,9 @@ class CustomTransformer(nn.Module):
         self.layers = layers
         self.grad_checkpointing = False
         self.xattn = xattn
+        if self.xattn and not TORCH_IS_2_X:
+            self.xattn = False
+            warnings.warn('sdpa not supported in PyTorch 1.x, falling back to vanilla implementation.')
 
         self.resblocks = nn.ModuleList([
             CustomResidualAttentionBlock(
@@ -441,7 +453,11 @@ class ResidualAttentionBlock(nn.Module):
         super().__init__()
 
         self.ln_1 = norm_layer(d_model)
-        if xattn:
+        self.xattn = xattn
+        if self.xattn and not TORCH_IS_2_X:
+            self.xattn = False
+            warnings.warn('sdpa not supported in PyTorch 1.x, falling back to vanilla implementation.')
+        if self.xattn:
             self.attn = Attention(d_model, n_head, xattn=True)
         else:
             self.attn = nn.MultiheadAttention(d_model, n_head)
@@ -456,13 +472,15 @@ class ResidualAttentionBlock(nn.Module):
         ]))
 
         self.ls_2 = LayerScale(d_model, ls_init_value) if ls_init_value is not None else nn.Identity()
-        self.xattn = xattn
+
 
     def attention(self, x: torch.Tensor, attn_mask: Optional[torch.Tensor] = None):
         attn_mask = attn_mask.to(x.dtype) if attn_mask is not None else None
         if self.xattn:
             return self.attn(x, attn_mask=attn_mask)
-        return self.attn(x, x, x, need_weights=False, attn_mask=attn_mask)[0]
+        return self.attn(x, x, x, 
+                         need_weights=False, 
+                         attn_mask=attn_mask)[0]
 
     def forward(self, x: torch.Tensor, attn_mask: Optional[torch.Tensor] = None):
         x = x + self.ls_1(self.attention(self.ln_1(x), attn_mask=attn_mask))

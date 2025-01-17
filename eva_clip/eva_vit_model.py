@@ -3,6 +3,7 @@
 # --------------------------------------------------------
 import math
 import os
+import warnings
 from functools import partial
 import torch
 import torch.nn as nn
@@ -16,6 +17,8 @@ from .transformer import PatchDropout
 from .rope import VisionRotaryEmbedding, VisionRotaryEmbeddingFast
 
 from torch.utils.checkpoint import checkpoint
+
+TORCH_IS_2_X = torch.__version__.split('.')[0] == '2'
 
 
 class DropPath(nn.Module):
@@ -154,6 +157,9 @@ class Attention(nn.Module):
         self.proj = nn.Linear(all_head_dim, dim)
         self.proj_drop = nn.Dropout(proj_drop)
         self.xattn = xattn
+        if self.xattn and not TORCH_IS_2_X:
+            self.xattn = False
+            warnings.warn('sdpa not supported in PyTorch 1.x, falling back to vanilla implementation.')
         self.xattn_drop = attn_drop
 
         self.rope = rope
