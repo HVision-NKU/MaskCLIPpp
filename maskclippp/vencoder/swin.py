@@ -8,6 +8,7 @@
 # Copyright (c) Facebook, Inc. and its affiliates.
 # Modified by Bowen Cheng from https://github.com/SwinTransformer/Swin-Transformer-Semantic-Segmentation/blob/main/mmseg/models/backbones/swin_transformer.py
 
+from typing import List, Tuple, Dict
 import numpy as np
 import torch
 from torch import nn, Tensor
@@ -791,7 +792,7 @@ class D2SwinTransformer(BaseVisualEncoder):
                 outputs[k+self._feature_suffix] = y[k]
         return outputs
     
-    def extract_features(self, inputs: PaddedList) -> torch.Dict[str, Tensor]:
+    def extract_features(self, inputs: PaddedList) -> Dict[str, Tensor]:
         if self._finetune_none:
             self.eval()
             with torch.no_grad():

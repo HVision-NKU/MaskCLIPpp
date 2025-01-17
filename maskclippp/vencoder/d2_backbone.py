@@ -1,4 +1,5 @@
 import logging
+from typing import Dict
 import torch
 from torch import nn, Tensor
 import torch.nn.functional as F
@@ -73,7 +74,7 @@ class D2Backbone(BaseVisualEncoder):
             out_features[k+self._feature_suffix] = v
         return out_features
     
-    def extract_features(self, inputs: PaddedList) -> torch.Dict[str, Tensor]:
+    def extract_features(self, inputs: PaddedList) -> Dict[str, Tensor]:
         if self._finetune_none:
             self.eval()
             with torch.no_grad():

@@ -1,4 +1,4 @@
-from typing import Tuple, List, Optional
+from typing import Tuple, List, Optional, Dict
 import logging
 from pathlib import Path
 import torch
@@ -48,7 +48,7 @@ class CLIPViT(BaseVisualEncoder):
             load_from_path = Path(cfg.LOAD_FROM)
             if not load_from_path.exists():
                 raise FileNotFoundError(f"LOAD_FROM {load_from_path} does not exist")
-            load_ckpt = torch.load(load_from_path, map_location='cpu', weights_only=True)
+            load_ckpt = torch.load(load_from_path, map_location='cpu')
             if 'model' in load_ckpt:
                 load_ckpt = load_ckpt['model']
             load_state_dict_with_beg_key(self.proxy, load_ckpt, cfg.LOAD_BEG_KEY, 
@@ -273,7 +273,7 @@ class CLIPViT(BaseVisualEncoder):
                 out[mk] = m_embs
         return out
         
-    def extract_features(self, inputs: PaddedList) -> torch.Dict[str, Tensor]:
+    def extract_features(self, inputs: PaddedList) -> Dict[str, Tensor]:
         if self._finetune_none:
             self.eval()
             with torch.no_grad():
