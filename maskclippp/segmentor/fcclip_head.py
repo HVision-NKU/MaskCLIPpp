@@ -23,7 +23,7 @@ class FCCLIPSegmentor(BaseSegmentor):
                  transformer_decoder: nn.Module,
                  pretrained: str,
                  ) -> None:
-        super().__init__(mask_is_padded=True)
+        super().__init__(mask_is_padded=True, pretrained=pretrained)
         
         self.pixel_decoder = pixel_decoder
         self.predictor = transformer_decoder

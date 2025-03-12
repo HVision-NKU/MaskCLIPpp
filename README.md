@@ -30,39 +30,67 @@ See [Preparing Datasets for MaskCLIP++](datasets/README.md).
 
 ### Pretrained CLIP models
 
-The pre-trained CLIP can be downloaded automatically from huggingface.
+The pre-trained CLIP can be downloaded **automatically** from huggingface.
 
 
 ### Mask generators
 
-The mask generators we already support are as follows. If the `path` column is given, it is required to manually download the model to the corresponding relative path.
+All models can be **automatically** downloaded during runtime. If there are network issues in the runtime environment, you can expand the following table and download the models in the `url` column to the `path` location.
+
+<details>
+<summary>Unfold</summary>
 
 | name | weights |  path |
 |:----:|:-------:|:-----:|
 | Mask2Former (Swin-T) | [url](https://dl.fbaipublicfiles.com/maskformer/mask2former/coco/panoptic/maskformer2_swin_tiny_bs16_50ep/model_final_9fd0ae.pkl) | `output/ckpts/mask2former/coco/pan/maskformer2_swin_tiny_bs16_50ep_final_9fd0ae.pkl` |
 | Mask2Former (Swin-L) | [url](https://dl.fbaipublicfiles.com/maskformer/mask2former/coco/panoptic/maskformer2_swin_large_IN21k_384_bs16_100ep/model_final_f07440.pkl) | `output/ckpts/mask2former/coco/pan/maskformer2_swin_large_IN21k_384_bs16_100ep_final_f07440.pkl` |
-| FC-CLIP (ConvNext-B) | [url](https://drive.google.com/file/d/1fSFPPTwxF-ekMxAmIo01ssdbC79wwwml/view?usp=drive_link)(*) | `output/ckpts/fcclip/fcclip_coco-pan_clip-convnext-base.pth`  |
-| FC-CLIP (ConvNeXt-L) | [url](https://drive.google.com/file/d/1-91PIns86vyNaL3CzMmDD39zKGnPMtvj/view?usp=sharing) | `output/ckpts/fcclip/fcclip_coco-pan_clip-convnext-large.pth` |
-| MAFTP-B              | [url](https://drive.google.com/file/d/1BeEeKOnWWIWIH-QWK_zLhAPUzCOnHuFG/view?usp=sharing) | `output/ckpts/maftp/maftp_b.pth` |
-| MAFTP-L              | [url](https://drive.google.com/file/d/1EQo5guVuKkSSZj4bv0FQN_4X9h_Rwfe5/view?usp=sharing) | `output/ckpts/maftp/maftp_l.pth` |
+| FC-CLIP (ConvNext-B) | [url](https://drive.google.com/uc?id=1fSFPPTwxF-ekMxAmIo01ssdbC79wwwml)(*) | `output/ckpts/fcclip/fcclip_coco-pan_clip-convnext-base.pth`  |
+| FC-CLIP (ConvNeXt-L) | [url](https://drive.google.com/uc?id=1-91PIns86vyNaL3CzMmDD39zKGnPMtvj) | `output/ckpts/fcclip/fcclip_coco-pan_clip-convnext-large.pth` |
+| MAFTP-B              | [url](https://drive.google.com/uc?id=1BeEeKOnWWIWIH-QWK_zLhAPUzCOnHuFG) | `output/ckpts/maftp/maftp_b.pth` |
+| MAFTP-L              | [url](https://drive.google.com/uc?id=1EQo5guVuKkSSZj4bv0FQN_4X9h_Rwfe5) | `output/ckpts/maftp/maftp_l.pth` |
+| MAFTP-L-PANO         | [url](https://drive.google.com/uc?id=1znk_uco8fwvbA0kndy4kGyVp22KbQr6g) | `output/ckpts/maftp/maftp_l_pano.pth` |
 
 > Except for the asterisk-marked(*) url, all the other urls are from the original repository
 
+</details>
 
 ### MaskCLIP++ models
 
-#### (i) Finetuned on COCO-Stuff
+Our model can be combined with the previous mask generator to achieve better open-vocabulary image segmentation performance. The following checkpoint should be **manually** downloaded to a local path.
 
-> Use mask generators from MAFTP. Eval on 5 datasets.
+Our best checkpoint: [EVA02 CLIP-L-14, finetuned both CLIP-V and CLIP-T, on COCO Stuff](https://drive.google.com/file/d/1I5SiU5S-BjgoGU73ndocg-e2jo80mP1n/view?usp=drive_link)
+
+#### (i) Sem. Seg
+
+| Config | A-847 | PC-459 | A-150 | PC-59 | PAS-20 |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+| FC-CLIP | 14.8 | 18.2 | 34.1 | 58.4 | 95.4 |
+| [Ours + FC-CLIP](configs/coco-stuff/eva-clip-vit-l-14-336/fcclip-l/maskclippp_coco-stuff_eva-clip-vit-l-14-336_wtext_fcclip-l_ens.yaml) | 15.4 | 21.3 | 37.1 | 62.6 | 96.4 |
+| MAFTP   | 15.1 | 21.6 | 36.1 | 59.4 | 96.5 |
+| [Ours + MAFTP](configs/coco-stuff/eva-clip-vit-l-14-336/maft-l/maskclippp_coco-stuff_eva-clip-vit-l-14-336_wtext_maft-l_ens.yaml)   | 16.8 | 23.9 | 38.2 | 62.5 | 96.8 |
+
+#### (ii) Panopt. Seg and Inst. Seg
+
+| Config | PQ | SQ | RQ | AP |
+|:---:|:---:|:---:|:---:|:---:|
+| FC-CLIP | 26.8 | 71.5 | 32.2 | 16.8 |
+| [Ours + FC-CLIP](configs/coco-stuff/eva-clip-vit-l-14-336/fcclip-l/maskclippp_coco-stuff_eva-clip-vit-l-14-336_wtext_fcclip-l_ens.yaml) | 27.7 | 72.0 | 33.6 | 17.3 |
+| MAFTP | 27.1 | 73.5 | 32.9 | - |
+| [Ours + MAFTP](configs/coco-stuff/eva-clip-vit-l-14-336/maft-l-pan/maskclippp_coco-stuff_eva-clip-vit-l-14-336_wtext_maft-l-pan_ens.yaml) | 28.1 | 74.0 | 34.7 | - |
+
+
+<details>
+<summary>All models</summary>
+
+>  Finetuned CLIP-V, on COCO-Stuff, Use mask generators from MAFTP.
 
 | config | ckpt | A-847 | PC-459 | A-150 | PC-59 | PAS-20 |
 |:------:|:------:|:------:|:------:|:------:|:------:|:------:|
 | [clip-convnext-base](configs/coco-stuff/clip-convnext-base/maft-b/maskclippp_coco-stuff_clip-convnext-base_maft-b_ens.yaml) | [url](https://drive.google.com/file/d/1SekxdQPCMXLaAd8mM0P20DbHKhtIYL3u/view?usp=drive_link) | 14.5 | 18.7 | 35.4 | 59.1 | 95.8 |
 | [eva-clip-vit-l-14-336](configs/coco-stuff/eva-clip-vit-l-14-336/maft-l/maskclippp_coco-stuff_eva-clip-vit-l-14-336_wtext_maft-l_ens.yaml) | [url](https://drive.google.com/file/d/1I5SiU5S-BjgoGU73ndocg-e2jo80mP1n/view?usp=drive_link) | 16.8 | 23.9 | 38.2 | 62.5 | 96.8 |
 
-#### (ii) Finetuned on COCO-Panoptic
 
-> Use mask generators from FC-CLIP. Eval on ADE20K.
+>  Finetuned CLIP-V, on COCO-Panoptic, Use mask generators from FC-CLIP. Eval on ADE20K.
 
 | config | ckpt | mIoU | PQ | AP |
 |:---:|:---:|:---:|:---:|:---:|
@@ -74,6 +102,10 @@ The mask generators we already support are as follows. If the `path` column is g
 | [eva-clip-vit-l-14-336](configs/coco-pan/eva-clip-vit-l-14-336/fcclip-l/maskclippp_coco-pan_eva-clip-vit-l-14-336_fcclip-l.yaml) | [url](https://drive.google.com/file/d/1xMlDmgiVuShx-KWzLzOB-0_qvawIAa9m/view?usp=drive_link) | 36.6 | 27.3 | 17.0 |
 | [eva-clip-vit-g-14-plus](configs/coco-pan/eva-clip-vit-g-14-plus/fcclip-l/maskclippp_coco-pan_eva-clip-vit-g-14-plus_fcclip-l.yaml) | [url](https://drive.google.com/file/d/1hCj0eZdTKbt5DusULFGBk3Bk8bxUGGm-/view?usp=drive_link) | 36.8 | 27.7 | 17.1 |
 
+
+</details>
+
+
 ## Usage
 
 ## Demo
@@ -82,6 +114,29 @@ The mask generators we already support are as follows. If the `path` column is g
 
 ### Evaluation
 
+#### Mask Classification Evaluation
+
+```bash
+source eval_mask_acc.sh
+eval_mask_acc_ade150 $config $ckpt $ngpu $tag 1
+# $ngpu is an integer representing the number of GPUs in use.
+# $tag is the name of a run.
+# more options can be found in eval_mask_acc.sh
+```
+
+
+
+| Model | Script |  A-847 | PC-459 | A-150 | PC-59 | Stuff | Citys | General | Earth | Medical | Engineer | Agriculture |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| Origin CLIP | `eval_mask_acc_xxx $config "\"\"" $ngpu $tag 0` | 35.2 | 44.8 | 52.7 | 54.6 | 45.0 | 44.9 | 56.9 | 60.5 | 61.7 | 33.8 | 52.4 |
+| MaskCLIP++ | `eval_mask_acc_xxx $config $ckpt $ngpu $tag 0` | 38.4 | 56.4 | 67.0 | 85.2 | 67.8 | 71.0 | 67.9 | 68.6 | 74.7 | 50.3 | 65.5 |
+
+
+> Mask Accuracy is reported above.
+> Use the [config](configs/coco-stuff/eva-clip-vit-l-14-336/maft-l/maskclippp_coco-stuff_eva-clip-vit-l-14-336_wtext_maft-l_ens.yaml) and [our best checkpoint](https://drive.google.com/file/d/1I5SiU5S-BjgoGU73ndocg-e2jo80mP1n/view?usp=drive_link).
+
+#### OVS Evaluation
+
 ```bash
 source eval_all.sh
 eval_ade150 $config $ckpt $ngpu $tag
@@ -89,6 +144,10 @@ eval_ade150 $config $ckpt $ngpu $tag
 # $tag is the name of a run.
 # Other options include: eval_ade847, eval_ctx459, eval_ctx59, eval_pc20
 ```
+
+
+
+
 
 ### Fine-tuning
 

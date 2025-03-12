@@ -53,7 +53,7 @@ def get_parser():
     parser = argparse.ArgumentParser(description="maskclippp demo for builtin configs")
     parser.add_argument(
         "--config-file",
-        default="configs/coco-stuff/eva-clip-vit-l-14-336/maft-l/maskclippp_coco-stuff_eva-clip-vit-l-14-336_wtext_maft-l_ens.yaml",
+        default="configs/coco-stuff/eva-clip-vit-l-14-336/fcclip-l/maskclippp_coco-stuff_eva-clip-vit-l-14-336_wtext_fcclip-l_ens.yaml",
         metavar="FILE",
         help="path to config file",
     )

@@ -7,7 +7,7 @@ MODEL:
     VISUAL_ENCODER:
       NAME: "CLIPConvNeXt"
       MODEL_NAME: "convnext_base_w_320"
-      PRETRAINED: "pretrained/laion_CLIP-convnext_base_w_320-laion_aesthetic-s13B-b82K-augreg/open_clip_pytorch_model.bin"
+      PRETRAINED: "laion_aesthetic-s13B-b82K-augreg"
       OUT_FEATURES: ["m_embs", "p_embs"]
       FEATURE_SUFFIX: ""
       FINETUNE_TYPE: "all"
@@ -22,7 +22,7 @@ MODEL:
     TEXT_ENCODER:
       NAME: "CLIPTextEncoder"
       MODEL_NAME: "convnext_base_w_320"
-      PRETRAINED: "pretrained/laion_CLIP-convnext_base_w_320-laion_aesthetic-s13B-b82K-augreg/open_clip_pytorch_model.bin"
+      PRETRAINED: "laion_aesthetic-s13B-b82K-augreg"
     TEMPLATES: "t14"
     PSM:
       NAME: "PseudoTextPSM"

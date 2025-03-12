@@ -5,6 +5,7 @@ pyrightconfig.json
 eval*.sh
 train*.sh
 !eval_all.sh
+!eval_mask_acc.sh
 .__dpc*
 matches.json
 make_gif.py

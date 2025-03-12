@@ -1,18 +1,28 @@
 from typing import Dict, List, Optional, Tuple, Any, Union
 from abc import ABCMeta, abstractmethod
+import logging
 import torch
 from torch import nn, Tensor, device
 import torch.nn.functional as F
-
+from detectron2.utils import comm
 from ..vencoder import PaddedList
+from ..utils.ckpt import download_mask_generator
+
+_logger = logging.getLogger(__name__)
+
 
 class BaseSegmentor(nn.Module, metaclass=ABCMeta):
     
     def __init__(self,
-                 mask_is_padded) -> None:
+                 mask_is_padded,
+                 pretrained="") -> None:
         super().__init__()
         self._mask_is_padded = mask_is_padded
-    
+        
+        if len(pretrained) > 0:
+            if comm.get_local_rank() == 0:
+                download_mask_generator(pretrained, _logger)
+            comm.synchronize()
     
     @abstractmethod
     def is_closed_classifier(self) -> bool:

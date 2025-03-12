@@ -41,3 +41,4 @@ from .evaluation.instance_evaluation import InstanceSegEvaluator
 from .evaluation.city_evaluation import CityscapesInstanceEvaluator
 from .evaluation.semantic_evaluation import SemSegEvaluator
 from .evaluation.masks_evaluation import MaskWithGTAssignEvaluator
+from .evaluation.mask_acc_evaluation import MaskAccEvaluator, PanMaskAccEvaluator

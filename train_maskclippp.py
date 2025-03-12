@@ -53,6 +53,8 @@ from detectron2.utils.logger import setup_logger
 from detectron2.engine import HookBase, create_ddp_model, AMPTrainer, SimpleTrainer
 from detectron2.utils.events import EventStorage
 
+import mess.datasets
+
 from maskclippp import (
     COCOInstanceNewBaselineDatasetMapper,
     COCOPanopticNewBaselineDatasetMapper,
@@ -63,6 +65,8 @@ from maskclippp import (
     InstanceSegEvaluator,
     CityscapesInstanceEvaluator,
     MaskWithGTAssignEvaluator,
+    MaskAccEvaluator,
+    PanMaskAccEvaluator,
     SemanticSegmentorWithTTA,
 )
 
@@ -149,6 +153,19 @@ class Trainer(DefaultTrainer):
                     distributed=True,
                     output_dir=output_folder,
                 )
+        if cfg.MODEL.MASKCLIPPP.TEST.MASK_ACC:
+            if cfg.MODEL.MASKCLIPPP.SEGMENTOR.NAME == "PanGTSegmentor":
+                return PanMaskAccEvaluator(
+                    dataset_name,
+                    distributed=True,
+                    output_dir=output_folder,
+                )
+            else:
+                return MaskAccEvaluator(
+                    dataset_name,
+                    distributed=True,
+                    output_dir=output_folder,
+                )
         # semantic segmentation
         if evaluator_type in ["sem_seg", "ade20k_panoptic_seg"]:
             evaluator_list.append(
@@ -223,9 +240,6 @@ class Trainer(DefaultTrainer):
         # Semantic segmentation dataset mapper
         if cfg.INPUT.DATASET_MAPPER_NAME == "mask_former_semantic":
             mapper = MaskFormerSemanticDatasetMapper(cfg, True)
-            return build_detection_train_loader(cfg, mapper=mapper)
-        elif cfg.INPUT.DATASET_MAPPER_NAME == "mask_former_semantic_zsl":
-            mapper = MaskFormerSemanticZSLDatasetMapper(cfg, True)
             return build_detection_train_loader(cfg, mapper=mapper)
         # Panoptic segmentation dataset mapper
         elif cfg.INPUT.DATASET_MAPPER_NAME == "mask_former_panoptic":

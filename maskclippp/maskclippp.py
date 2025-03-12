@@ -55,6 +55,7 @@ class MaskCLIPpp(nn.Module):
         panoptic_on: bool,
         instance_on: bool,
         instance_box_on: bool,
+        mask_acc_on: bool,
         test_topk_per_image: int,
         ensemble_on: bool,
         geometric_ensemble_alpha: float,
@@ -99,6 +100,7 @@ class MaskCLIPpp(nn.Module):
         self.panoptic_on = panoptic_on
         self.instance_on = instance_on
         self.instance_box_on = instance_box_on
+        self.mask_acc_on = mask_acc_on
         self.test_topk_per_image = test_topk_per_image
         
         # ensemble
@@ -199,6 +201,7 @@ class MaskCLIPpp(nn.Module):
             "panoptic_on": cfg.MODEL.MASK_FORMER.TEST.PANOPTIC_ON,
             "instance_on": cfg.MODEL.MASK_FORMER.TEST.INSTANCE_ON,
             "instance_box_on": cfg.MODEL.MASK_FORMER.TEST.INSTANCE_BOX_ON,
+            "mask_acc_on": cfg.MODEL.MASKCLIPPP.TEST.MASK_ACC,
             "test_topk_per_image": cfg.TEST.DETECTIONS_PER_IMAGE,
             "ensemble_on": cfg.MODEL.MASKCLIPPP.TEST.ENSEMBLE_ON,
             "geometric_ensemble_alpha": cfg.MODEL.MASKCLIPPP.TEST.GEOMETRIC_ENSEMBLE_ALPHA,
@@ -657,7 +660,8 @@ class MaskCLIPpp(nn.Module):
                     mask_pred_result, (height, width), 'bilinear'
                 )
                 mask_cls_result = mask_cls_result.to(mask_pred_result)
-            
+            if self.mask_acc_on:
+                processed_results[-1]["mask_cls"] = self._mask_cls_inferece(mask_cls_result)
             # semantic segmentation inference
             if self.semantic_on:
                 r = retry_if_cuda_oom(self._semantic_inference)(mask_cls_result, mask_pred_result)
@@ -675,6 +679,14 @@ class MaskCLIPpp(nn.Module):
         return processed_results
     
     
+    def _mask_cls_inferece(self, mask_cls):
+        K = len(self.test_num_synonyms)
+        if mask_cls.size(1) == K:
+            return mask_cls.argmax(-1)
+        elif mask_cls.size(1) == K + 1:
+            return mask_cls[:, :-1].argmax(-1)
+        return None
+        
     def _semantic_inference(self, mask_cls, mask_pred):
         K = len(self.test_num_synonyms)
         if mask_cls.size(1) == K:

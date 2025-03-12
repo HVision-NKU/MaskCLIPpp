@@ -1,0 +1,33 @@
+_BASE_: ../maskclippp_coco-stuff_eva-clip-vit-l-14-336_wtext.yaml
+
+MODEL:
+  MASK_FORMER:
+    NUM_OBJECT_QUERIES: 250
+    TEST:
+      SEMANTIC_ON: True
+      INSTANCE_ON: True
+      PANOPTIC_ON: True
+      OBJECT_MASK_THRESHOLD: 0.0
+  MASKCLIPPP:
+    VISUAL_ENCODER_F:
+      NAME: "CLIPConvNeXt"
+      MODEL_NAME: "convnext_large_d_320"
+      PRETRAINED: "laion2B-s29B-b131K-ft-soup"
+      OUT_FEATURES: ["stage1_f", "stage2_f", "stage3_f", "stage4_f"]
+      FEATURE_SUFFIX: "_f"
+      FINETUNE_TYPE: "none"
+      PIXEL_MEAN: [122.7709383, 116.7460125, 104.09373615]
+      PIXEL_STD: [68.5005327, 66.6321579, 70.32316305]
+      SIZE_DIVISIBILITY: 32
+      TEST_RESIZE_TYPE: "short"
+      TEST_IMAGE_SIZE: 800
+      MASK_PRIOR_BEG: 5
+    TEXT_ENCODER_F:
+      NAME: "CLIPTextEncoder"
+      MODEL_NAME: "convnext_large_d_320"
+      PRETRAINED: "laion2B-s29B-b131K-ft-soup"
+    SEGMENTOR:
+      NAME: "FCCLIPSegmentor"
+      PRETRAINED: "output/ckpts/fcclip/fcclip_coco-pan_clip-convnext-large.pth"
+      IN_FEATURES: ["stage1_f", "stage2_f", "stage3_f", "stage4_f"]
+      TRANSFORMER_IN_FEATURES: ["stage2_f", "stage3_f", "stage4_f"]

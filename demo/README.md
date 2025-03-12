@@ -32,8 +32,8 @@ config="configs/coco-stuff/eva-clip-vit-l-14-336/maft-l/maskclippp_coco-stuff_ev
 ckpt="output/ckpts/maskclippp/maskclippp_coco-stuff_eva-clip-vit-l-14-336_wtext.pth"
 
 # # OVSS/OVPS/OVIS
-# config="configs/coco-pan/eva-clip-vit-l-14-336/fcclip-l/maskclippp_coco-pan_eva-clip-vit-l-14-336_fcclip-l.yaml"
-# ckpt="output/ckpts/maskclippp/maskclippp_coco-pan_eva-clip-vit-l-14-336.pth"
+# config="configs/coco-stuff/eva-clip-vit-l-14-336/fcclip-l/maskclippp_coco-stuff_eva-clip-vit-l-14-336_wtext_fcclip-l_ens.yaml"
+
 
 python demo/app.py \
     --config-file $config \
@@ -57,10 +57,12 @@ python demo/demo.py -h
 ### Open-Vocabulary Semantic Segmentation
 
 ```shell
-config="configs/coco-stuff/eva-clip-vit-l-14-336/maft-l/maskclippp_coco-stuff_eva-clip-vit-l-14-336_wtext_maft-l_ens.yaml"
+config="configs/coco-stuff/eva-clip-vit-l-14-336/fcclip-l/maskclippp_coco-stuff_eva-clip-vit-l-14-336_wtext_fcclip-l_ens.yaml"
 ckpt="output/ckpts/maskclippp/maskclippp_coco-stuff_eva-clip-vit-l-14-336_wtext.pth"
 python demo/demo.py \
     --config-file $config \
+    --input /path/to/imgs \
+    --output /path/to/output \
     --opts \
     MODEL.WEIGHTS $ckpt \
     MODEL.MASK_FORMER.TEST.PANOPTIC_ON False \
@@ -73,10 +75,12 @@ python demo/demo.py \
 **Note: Please use the mask generator trained on panoptic segmentation data**
 
 ```shell
-config="configs/coco-pan/eva-clip-vit-l-14-336/fcclip-l/maskclippp_coco-pan_eva-clip-vit-l-14-336_fcclip-l.yaml"
-ckpt="output/ckpts/maskclippp/maskclippp_coco-pan_eva-clip-vit-l-14-336.pth"
+config="configs/coco-stuff/eva-clip-vit-l-14-336/fcclip-l/maskclippp_coco-stuff_eva-clip-vit-l-14-336_wtext_fcclip-l_ens.yaml"
+ckpt="output/ckpts/maskclippp/maskclippp_coco-stuff_eva-clip-vit-l-14-336_wtext.pth"
 python demo/demo.py \
     --config-file $config \
+    --input /path/to/imgs \
+    --output /path/to/output \
     --opts \
     MODEL.WEIGHTS $ckpt \
     MODEL.MASK_FORMER.TEST.PANOPTIC_ON True \
@@ -89,10 +93,12 @@ python demo/demo.py \
 **Note: Please use the mask generator trained on panoptic/instance segmentation data**
 
 ```shell
-config="configs/coco-pan/eva-clip-vit-l-14-336/fcclip-l/maskclippp_coco-pan_eva-clip-vit-l-14-336_fcclip-l.yaml"
-ckpt="output/ckpts/maskclippp/maskclippp_coco-pan_eva-clip-vit-l-14-336.pth"
+config="configs/coco-stuff/eva-clip-vit-l-14-336/fcclip-l/maskclippp_coco-stuff_eva-clip-vit-l-14-336_wtext_fcclip-l_ens.yaml"
+ckpt="output/ckpts/maskclippp/maskclippp_coco-stuff_eva-clip-vit-l-14-336_wtext.pth"
 python demo/demo.py \
     --config-file $config \
+    --input /path/to/imgs \
+    --output /path/to/output \
     --confidence-threshold 0.3 \
     --opts \
     MODEL.WEIGHTS $ckpt \

@@ -1,10 +1,14 @@
 from typing import Dict, List, Optional, Tuple, Any, Union
+import logging
 from abc import ABCMeta, abstractmethod
 import torch
 from torch import nn, Tensor, device
 import torch.nn.functional as F
-
 from detectron2.layers import ShapeSpec
+from detectron2.utils import comm
+from ..utils.ckpt import download_mask_generator
+
+_logger = logging.getLogger(__name__)
 
 class PaddedList:
     def __init__(self, images: Tensor, masks: Optional[List[Tensor]], image_sizes: List[Tuple[int, int]]):
@@ -142,6 +146,10 @@ class BaseVisualEncoder(nn.Module, metaclass=ABCMeta):
         assert self._resize_type in ('none', 'short', 'square', 'rel')
         assert self._test_resize_type in ('none', 'short', 'square', 'rel')
         
+        if self._feature_suffix == '_f' and len(cfg.LOAD_FROM) > 0:
+            if comm.get_local_rank() == 0:
+                download_mask_generator(cfg.LOAD_FROM, _logger)  
+            comm.synchronize()   
         
     def _normalize_img(self, x: Tensor) -> Tensor:
         return (x - self.pixel_mean) / self.pixel_std

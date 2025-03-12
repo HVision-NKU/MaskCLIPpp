@@ -22,6 +22,6 @@
         "width": 768,
         "heads": 12,
         "layers": 12,
-        "xattn": false
+        "xattn": true
     }
 }

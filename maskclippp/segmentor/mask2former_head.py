@@ -5,6 +5,7 @@ from typing import Callable, Dict, List, Optional, Tuple, Union, Any
 
 import pickle
 import fvcore.nn.weight_init as weight_init
+import torch
 from torch import nn
 from torch.nn import functional as F
 
@@ -45,7 +46,7 @@ class Mask2FormerSegmentor(BaseSegmentor):
             transformer_predictor: the transformer decoder that makes prediction
             transformer_in_feature: input feature name to the transformer_predictor
         """
-        super().__init__(mask_is_padded=True)
+        super().__init__(mask_is_padded=True, pretrained=pretrained)
         input_shape = sorted(input_shape.items(), key=lambda x: x[1].stride)
         self.in_features = [k for k, v in input_shape]
         feature_strides = [v.stride for k, v in input_shape]
@@ -135,7 +136,7 @@ class Mask2FormerSegmentor(BaseSegmentor):
     def is_closed_classifier(self) -> bool:
         return True
     
-    def generate_masks(self, batched_inputs: Dict[str, Any], encode_dict: Dict[str, F.Tensor]) -> Tuple[List[F.Tensor] | F.Tensor | None]:
+    def generate_masks(self, batched_inputs: Dict[str, Any], encode_dict: Dict[str, torch.Tensor]) -> Tuple[List[torch.Tensor] | torch.Tensor | None]:
         mask_features, _, multi_scale_features = self.pixel_decoder.forward_features(encode_dict)
         predictions = self.predictor(multi_scale_features, mask_features, None)
         pred_masks = predictions["pred_masks"].sigmoid()

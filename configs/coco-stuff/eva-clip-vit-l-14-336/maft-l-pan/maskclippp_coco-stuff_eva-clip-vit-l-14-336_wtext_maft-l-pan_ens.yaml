@@ -1,0 +1,12 @@
+_BASE_: maskclippp_coco-stuff_eva-clip-vit-l-14-336_wtext_maft-l-pan.yaml
+
+MODEL:
+  MASKCLIPPP:
+    TEST:
+      ENSEMBLE_ON: True
+      GEOMETRIC_ENSEMBLE_ALPHA: 0.9
+
+# Because the mask generator is trained on coco-pan
+# set the dataset to coco-panoptic to make ensemble work correctly
+DATASETS:
+  TRAIN: ("openvocab_coco_2017_train_panoptic_with_sem_seg",)

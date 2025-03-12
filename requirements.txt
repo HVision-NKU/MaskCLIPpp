@@ -13,3 +13,4 @@ open_clip_torch==2.24.0
 pycocotools==2.0.7
 wandb==0.17.3
 gradio==5.9.1
+mess-benchmark==0.2
