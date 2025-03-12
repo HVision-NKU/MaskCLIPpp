@@ -80,14 +80,13 @@ Our best checkpoint: [EVA02 CLIP-L-14, finetuned both CLIP-V and CLIP-T, on COCO
 
 
 <details>
-<summary>All models</summary>
+<summary>Other models</summary>
 
 >  Finetuned CLIP-V, on COCO-Stuff, Use mask generators from MAFTP.
 
 | config | ckpt | A-847 | PC-459 | A-150 | PC-59 | PAS-20 |
 |:------:|:------:|:------:|:------:|:------:|:------:|:------:|
 | [clip-convnext-base](configs/coco-stuff/clip-convnext-base/maft-b/maskclippp_coco-stuff_clip-convnext-base_maft-b_ens.yaml) | [url](https://drive.google.com/file/d/1SekxdQPCMXLaAd8mM0P20DbHKhtIYL3u/view?usp=drive_link) | 14.5 | 18.7 | 35.4 | 59.1 | 95.8 |
-| [eva-clip-vit-l-14-336](configs/coco-stuff/eva-clip-vit-l-14-336/maft-l/maskclippp_coco-stuff_eva-clip-vit-l-14-336_wtext_maft-l_ens.yaml) | [url](https://drive.google.com/file/d/1I5SiU5S-BjgoGU73ndocg-e2jo80mP1n/view?usp=drive_link) | 16.8 | 23.9 | 38.2 | 62.5 | 96.8 |
 
 
 >  Finetuned CLIP-V, on COCO-Panoptic, Use mask generators from FC-CLIP. Eval on ADE20K.
