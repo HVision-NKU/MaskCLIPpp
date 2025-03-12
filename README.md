@@ -128,7 +128,7 @@ eval_mask_acc_ade150 $config $ckpt $ngpu $tag 1
 | Model | Script |  A-847 | PC-459 | A-150 | PC-59 | Stuff | Citys | General | Earth | Medical | Engineer | Agriculture |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | Origin CLIP | `eval_mask_acc_xxx $config "\"\"" $ngpu $tag 0` | 35.2 | 44.8 | 52.7 | 54.6 | 45.0 | 44.9 | 56.9 | 60.5 | 61.7 | 33.8 | 52.4 |
-| MaskCLIP++ | `eval_mask_acc_xxx $config $ckpt $ngpu $tag 0` | 38.4 | 56.4 | 67.0 | 85.2 | 67.8 | 71.0 | 67.9 | 68.6 | 74.7 | 50.3 | 65.5 |
+| MaskCLIP++ | `eval_mask_acc_xxx $config $ckpt $ngpu $tag 1` | 38.4 | 56.4 | 67.0 | 85.2 | 67.8 | 71.0 | 67.9 | 68.6 | 74.7 | 50.3 | 65.5 |
 
 
 > Mask Accuracy is reported above.
