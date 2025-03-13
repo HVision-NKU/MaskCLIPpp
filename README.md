@@ -1,13 +1,14 @@
-# MaskCLIP++: A Mask-Based CLIP Fine-tuning Framework for Open-Vocabulary Image Segmentation
+# MaskCLIP++: High-Quality Mask Tuning Matters for Open-Vocabulary Segmentation
 
 ## News
+- [x] (2025.03.13) Paper has been revised.
 - [x] (2025.01.03) Add [demo](demo/README.md).
 
 ## Introduction
 
 This repo contains the code for our [paper](https://arxiv.org/abs/2412.11464).
 
-**Abstract:** Open-vocabulary image segmentation has been advanced through the synergy between mask generators and vision-language models like Contrastive Language-Image Pre-training (CLIP). Previous approaches focus on generating masks while aligning mask features with text embeddings during training. In this paper, we observe that relying on generated low-quality masks can weaken the alignment of vision and language in regional representations. This motivates us to present a new fine-tuning framework, named MaskCLIP++, which uses ground-truth masks instead of generated masks to enhance the mask classification capability of CLIP. Due to the limited diversity of image segmentation datasets with mask annotations, we propose incorporating a consistency alignment constraint during fine-tuning, which alleviates categorical bias toward the fine-tuning dataset. After low-cost fine-tuning, combining with the mask generator in previous state-of-the-art mask-based open vocabulary segmentation methods, we achieve performance improvements of +1.7, +2.3, +2.1, +3.1, and +0.3 mIoU on the A-847, PC-459, A-150, PC-59, and PAS-20 datasets, respectively.
+**Abstract:** Open-vocabulary image segmentation has been advanced through the synergy between mask generators and vision-language models like Contrastive Language-Image Pre-training (CLIP). Previous approaches focus on generating masks while aligning mask features with text embeddings during training. In this paper, we observe that relying on generated low-quality masks can weaken the alignment of vision and language in regional representations. This motivates us to present a new fine-tuning framework, named MaskCLIP++, which uses ground-truth masks instead of generated masks to enhance the mask classification capability of CLIP. Due to the limited diversity of image segmentation datasets with mask annotations, we propose incorporating a consistency alignment principle during fine-tuning, which alleviates categorical bias toward the fine-tuning dataset. After low-cost fine-tuning, MaskCLIP++ significantly improves the mask classification performance on multi-domain datasets. Combining with the mask generator in previous state-of-the-art mask-based open vocabulary segmentation methods, we achieve performance improvements of +1.7, +2.3, +2.1, +3.1, and +0.3 mIoU on the A-847, PC-459, A-150, PC-59, and PAS-20 datasets, respectively.
 
 <div style="display: flex; justify-content: center; align-items: center; flex-direction: column; text-align: center; position: relative;">
   <img src="assets/framework.png" alt="Image" style="box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.3); width: 100%; max-width: 500px;">
@@ -163,11 +164,14 @@ python train_maskclippp.py \
 
 ## Citing MaskCLIP++
 ```
-@article{zeng2024maskclip++,
-  title={MaskCLIP++: A Mask-Based CLIP Fine-tuning Framework for Open-Vocabulary Image Segmentation},
-  author={Zeng, Quan-Sheng and Li, Yunheng and Zhou, Daquan and Li, Guanbin and Hou, Qibin and Cheng, Ming-Ming},
-  journal={arXiv preprint arXiv:2412.11464},
-  year={2024}
+@misc{zeng2025maskclippp,
+      title={High-Quality Mask Tuning Matters for Open-Vocabulary Segmentation}, 
+      author={Quan-Sheng Zeng and Yunheng Li and Daquan Zhou and Guanbin Li and Qibin Hou and Ming-Ming Cheng},
+      year={2025},
+      eprint={2412.11464},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2412.11464}, 
 }
 ```
 
