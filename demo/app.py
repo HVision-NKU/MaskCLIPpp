@@ -62,7 +62,7 @@ def create_interface(meta_demo: VisualizationDemo) -> gr.Interface:
             with gr.Column():
                 image_input = gr.Image(type="pil", label="Input Image", image_mode="RGB")
                 predefined_classes = gr.CheckboxGroup(choices=predefined_classes_options, label="Predefined Classes", value=["coco2017", "ade20k", "lvis1203"])
-                user_classes = gr.Textbox(label="User Classes (e.g. 'tree,trees|sky,clouds')")
+                user_classes = gr.Textbox(label="User Classes (foreground classes, e.g. Hulk|Thor|IronMan|Hawkeye)")
                 conf_th_bar = gr.Slider(minimum=0.0, maximum=1, step=0.1, value=0.3, label="Confidence Threshold")
                 set_classes_button = gr.Button("Submit Classes")
                 status_text = gr.Textbox(label="Status", value="Classes not updated", interactive=False)
