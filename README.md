@@ -1,5 +1,11 @@
 # MaskCLIP++: High-Quality Mask Tuning Matters for Open-Vocabulary Segmentation
 
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/maskclip-a-mask-based-clip-fine-tuning/open-vocabulary-semantic-segmentation-on-2)](https://paperswithcode.com/sota/open-vocabulary-semantic-segmentation-on-2?p=maskclip-a-mask-based-clip-fine-tuning)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/maskclip-a-mask-based-clip-fine-tuning/open-vocabulary-semantic-segmentation-on-3)](https://paperswithcode.com/sota/open-vocabulary-semantic-segmentation-on-3?p=maskclip-a-mask-based-clip-fine-tuning)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/maskclip-a-mask-based-clip-fine-tuning/open-vocabulary-semantic-segmentation-on-7)](https://paperswithcode.com/sota/open-vocabulary-semantic-segmentation-on-7?p=maskclip-a-mask-based-clip-fine-tuning)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/maskclip-a-mask-based-clip-fine-tuning/open-vocabulary-semantic-segmentation-on-1)](https://paperswithcode.com/sota/open-vocabulary-semantic-segmentation-on-1?p=maskclip-a-mask-based-clip-fine-tuning)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/maskclip-a-mask-based-clip-fine-tuning/open-vocabulary-semantic-segmentation-on-5)](https://paperswithcode.com/sota/open-vocabulary-semantic-segmentation-on-5?p=maskclip-a-mask-based-clip-fine-tuning)
+
 ## News
 - [x] (2025.03.13) Paper has been revised.
 - [x] (2025.01.03) Add [demo](demo/README.md).
